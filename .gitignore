@@ -1,0 +1,5 @@
+##bundle
+/dist/bundle.js
+
+##node modules
+/node_modules/

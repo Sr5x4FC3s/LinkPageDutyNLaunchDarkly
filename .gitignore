@@ -3,3 +3,9 @@
 
 ##node modules
 /node_modules/
+
+##environment variables 
+/.env
+
+##user information
+/userInfo.js

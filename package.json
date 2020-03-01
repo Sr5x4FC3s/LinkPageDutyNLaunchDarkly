@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "launchdarkly-node-server-sdk": "^5.11.2",
     "react": "^16.13.0",
     "react-dom": "^16.13.0"
   },

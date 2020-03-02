@@ -4,8 +4,8 @@ import ClientSDKLaunchDarkly from './LaunchDarklySDK/clientSDKLaunchDarkly';
 import ServerSDKLaunchDarkly from './LaunchDarklySDK/serverSDKLaunchDarkly';
 import axios from 'axios';
 
-import { withLDProvider } from 'launchdarkly-react-client-sdk';
-import { user1 } from '../../userInfo';
+import { withLDProvider, useFlags, useLDClient } from 'launchdarkly-react-client-sdk';
+import { user1 } from '../../lib/userInfo';
 
 class App extends React.Component {
   constructor(props) {
@@ -30,6 +30,7 @@ class App extends React.Component {
         });
       })
       .catch(err => console.log(err));
+
   };
 
   changeToggleStatus () {
@@ -42,11 +43,15 @@ class App extends React.Component {
     return (
       <div>
         <h1>Let's Connect LaunchDarkly with PagerDuty!</h1>
-        <Toggle 
+        {/* <Toggle 
           changeToggleStatus={this.changeToggleStatus}
           toggleStatus={this.state.toggleStatus}
+        /> */}
+        <ClientSDKLaunchDarkly 
+          SDK={this.state.dev_sdk_key}
+          ClientSideID={this.state.dev_client_side_id}
         />
-        {this.state.toggleStatus ?
+        {/* {this.state.toggleStatus ?
           <ClientSDKLaunchDarkly 
             SDK={this.state.dev_sdk_key}
             ClientSideID={this.state.dev_client_side_id}
@@ -56,7 +61,7 @@ class App extends React.Component {
             SDK={this.state.dev_sdk_key}
             ClientSideID={this.state.dev_client_side_id}
           />
-        }
+        } */}
       </div>
     )
   }

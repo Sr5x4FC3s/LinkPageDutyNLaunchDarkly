@@ -17,6 +17,7 @@
     "@babel/preset-env": "^7.8.6",
     "@babel/preset-react": "^7.8.3",
     "babel-loader": "^8.0.6",
+    "dotenv": "^8.2.0",
     "html-webpack-plugin": "^3.2.0",
     "nodemon": "^2.0.2",
     "webpack": "^4.41.6",
@@ -24,8 +25,10 @@
     "webpack-dev-server": "^3.10.3"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "express": "^4.17.1",
     "launchdarkly-node-server-sdk": "^5.11.2",
+    "launchdarkly-react-client-sdk": "^2.18.0",
     "react": "^16.13.0",
     "react-dom": "^16.13.0"
   },

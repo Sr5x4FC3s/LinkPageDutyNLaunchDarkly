@@ -36,7 +36,7 @@ app.use('/', express.static(path.join(__dirname, '../dist')));
 
 /** used to send environment variable values to the client side */
 app.get('/dev_keys', (req, res) => {
-  res.send({
+  res.status(200).send({
     SDK: process.env.DEV_SDK,
     clientSideID: process.env.DEV_CLIENT_SIDE_ID,
   })

@@ -2,16 +2,9 @@ import React, {useState, useEffect} from 'react';
 import { useFlags, useLDClient } from 'launchdarkly-react-client-sdk';
 import { user1 } from '../../../lib/userInfo';
 
-const ClientSDKLaunchDarkly = ({ SDK, ClientSideID }) => {
+const ClientSDKLaunchDarkly = ({ SDK, ClientSideID, flags }) => {
   const { devTestFlag, siteUnderMaintenance } = useFlags();
-
-  /** test */
-  useEffect(() => {
-    console.log(devTestFlag, siteUnderMaintenance);
-
-  }, [devTestFlag]);
-
-  /**  */
+  const ldClient = useLDClient();
 
   return (
     <div id='client-sdk'>
@@ -23,3 +16,4 @@ const ClientSDKLaunchDarkly = ({ SDK, ClientSideID }) => {
 };
 
 export default ClientSDKLaunchDarkly;
+

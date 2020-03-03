@@ -1,6 +1,7 @@
 import React from 'react';
 import Toggle from './button/toggle';
 import ClientSDKLaunchDarkly from './LaunchDarklySDK/clientSDKLaunchDarkly';
+import ClientLDAPIComponent from './LaunchDarklySDK/clientLaunchDarklyAPI';
 import ServerSDKLaunchDarkly from './LaunchDarklySDK/serverSDKLaunchDarkly';
 import PDApiAccessTestComponent from './PagerDuty/PDApiAccessTest';
 import axios from 'axios';
@@ -64,6 +65,7 @@ class App extends React.Component {
           ClientSideID={this.state.dev_client_side_id}
         />
         <PDApiAccessTestComponent />
+        <ClientLDAPIComponent />
         {/* {this.state.toggleStatus ?
           <ClientSDKLaunchDarkly 
             SDK={this.state.dev_sdk_key}

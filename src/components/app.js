@@ -5,7 +5,7 @@ import ServerSDKLaunchDarkly from './LaunchDarklySDK/serverSDKLaunchDarkly';
 import PDApiAccessTestComponent from './PagerDuty/PDApiAccessTest';
 import axios from 'axios';
 
-import { withLDProvider } from 'launchdarkly-react-client-sdk';
+import { withLDConsumer } from 'launchdarkly-react-client-sdk';
 import { user1 } from '../../lib/userInfo';
 
 class App extends React.Component {
@@ -18,6 +18,7 @@ class App extends React.Component {
       dev_client_side_id: '',
     };
 
+    this.fetchFlagStatus = this.fetchFlagStatus.bind(this);
     this.changeToggleStatus = this.changeToggleStatus.bind(this);
   }
 
@@ -32,6 +33,16 @@ class App extends React.Component {
       })
       .catch(err => console.log(err));
 
+    /** check flags for changes every 0.5 seconds */
+    // this.interval = setInterval(() => this.fetchFlagStatus(), 5000);
+  };
+
+  // componentWillUnmount() {
+  //   clearInterval(this.interval);
+  // };
+
+  fetchFlagStatus() {
+    console.log(this.props.flags);
   };
 
   changeToggleStatus () {
@@ -69,8 +80,4 @@ class App extends React.Component {
   }
 };
 
-export default withLDProvider({ 
-  clientSideID: user1.ClientSideId,
-  user: user1.info,
-  options: { /* ... */ }
-})(App);
+export default withLDConsumer()(App);

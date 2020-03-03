@@ -2,9 +2,29 @@ import React, {useState, useEffect} from 'react';
 import { useFlags, useLDClient } from 'launchdarkly-react-client-sdk';
 import { user1 } from '../../../lib/userInfo';
 
-const ClientSDKLaunchDarkly = ({ SDK, ClientSideID, flags }) => {
+const ClientSDKLaunchDarkly = ({ SDK, ClientSideID }) => {
   const { devTestFlag, siteUnderMaintenance } = useFlags();
   const ldClient = useLDClient();
+
+  const checkAtIntervals = () => {
+    
+  };
+
+  const subscribeToFlagChanges = () => {
+    
+  };
+
+  // useEffect(() => {
+  //   let id = setInterval(() => {
+  //     console.log(devTestFlag, siteUnderMaintenance);
+  //   }, 3000);
+  //   return () => clearInterval(id);
+  // });
+
+
+  useEffect(() => {
+    subscribeToFlagChanges();
+  }, [])
 
   return (
     <div id='client-sdk'>

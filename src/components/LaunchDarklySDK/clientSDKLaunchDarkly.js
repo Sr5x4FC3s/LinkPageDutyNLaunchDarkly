@@ -1,7 +1,38 @@
 import React, {useState, useEffect} from 'react';
 import { useFlags, useLDClient } from 'launchdarkly-react-client-sdk';
-import { user1 } from '../../../lib/userInfo';
+import { PagerDutyRoutingKey } from '../../../lib/userInfo';
 import { httpsPOST } from '../../../lib/utils';
+
+/** PagerDuty Mock Payload to Trigger an Incident */
+const PD_payload = {
+  "payload": {
+    "summary": "Site-Under-Maintenance Flag has been triggered. Application is now offline to all users.",
+    "timestamp": "2020-03-02T08:42:58.315+0000",
+    "source": "http://127.0.0.1:8080",
+    "severity": "critical",
+    "component": "application",
+    "group": "prod-datapipe",
+    "class": "deploy",
+    "custom_details": {
+      "ping time": "1500ms",
+      "load avg": 0.75
+    }
+  },
+  "routing_key": PagerDutyRoutingKey,
+  "dedup_key": "samplekeyhere",
+  "images": [{
+    "src": "https://www.pagerduty.com/wp-content/uploads/2016/05/pagerduty-logo-green.png",
+    "href": "https://example.com/",
+    "alt": "Example text"
+  }],
+  "links": [{
+    "href": "https://example.com/",
+    "text": "Link text"
+  }],
+  "event_action": "trigger",
+  "client": "Sample Monitoring Service",
+  "client_url": "https://monitoring.example.com"
+};
 
 const ClientSDKLaunchDarkly = ({ SDK, ClientSideID }) => {
   const { devTestFlag, siteUnderMaintenance } = useFlags();
@@ -15,16 +46,18 @@ const ClientSDKLaunchDarkly = ({ SDK, ClientSideID }) => {
     httpsPOST('/emailAlertNotification', payload);
   };
 
-  const subscribeToFlagChanges = () => {
-  };
+  /** Triggered if site-under-maintenance or dev-test-flag evaluates to false */
+  useEffect(() => {
+    if (!siteUnderMaintenance) {      
+      httpsPOST('https://events.pagerduty.com/v2/enqueue', PD_payload);
+      sendEmailAlert();
+    }
 
-  // useEffect(() => {
-  //   let id = setInterval(() => {
-  //     console.log(devTestFlag, siteUnderMaintenance);
-  //     // subscribeToFlagChanges();
-  //   }, 3000);
-  //   return () => clearInterval(id);
-  // });
+    if (!devTestFlag) {
+      httpsPOST('https://events.pagerduty.com/v2/enqueue', PD_payload);
+      sendEmailAlert();
+    }
+  }, [devTestFlag, siteUnderMaintenance]);
 
   return (
     <div id='client-sdk'>

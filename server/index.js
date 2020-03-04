@@ -16,7 +16,7 @@ const app = express();
 /** Initializing LaunchDarkly + LD Event Listener */
 const ldClient = connectLD(process.env.DEV_SDK);
 
-LDFlagSubscription(ldClient, 'site-under-maintenance', user, () => LDVariationFlagTrigger(ldClient, 'site-under-maintenance', user, true));
+// LDFlagSubscription(ldClient, 'site-under-maintenance', user, () => LDVariationFlagTrigger(ldClient, 'site-under-maintenance', user, true));
 
 
 app.use(bodyParser.urlencoded({extended: false}));

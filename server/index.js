@@ -1,5 +1,7 @@
 require('dotenv').config();
 const { createTransporter, createMailOptions, send } = require('../lib/email/utils');
+const { connectLD, LDFlagSubscription, LDVariationFlagTrigger } = require('./LaunchDarkly/utils');
+const { user } = require('./LaunchDarkly/user');
 
 const express = require('express');
 const path = require('path');
@@ -11,26 +13,17 @@ const LaunchDarkly = require('launchdarkly-node-server-sdk');
 
 const app = express();
 
+/** Initializing LaunchDarkly + LD Event Listener */
+const ldClient = connectLD(process.env.DEV_SDK);
+
+LDFlagSubscription(ldClient, 'site-under-maintenance', user, () => LDVariationFlagTrigger(ldClient, 'site-under-maintenance', user, true));
+
+
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(bodyParser.json());
 
 app.use('/', express.static(path.join(__dirname, '../dist')));
-
-// app.use('/', (req, res, next) => {
-//   const ldclient = LaunchDarkly.init('sdk-4fd0910a-deaf-45ec-a076-3d4e481b51d3');
-
-//   ldclient.once('ready', function() {
-//     ldclient.variation('your.flag.key', {key: 'user@test.com'}, false, function(err, showFeature) {
-//       if (showFeature) {
-//           // application code to show the feature
-//       } else {
-//           // the code to run if the feature is off
-
-//       }
-//     });
-//   });
-// });
 
 /** used to send environment variable values to the client side */
 app.get('/dev_keys', (req, res) => {
@@ -65,6 +58,12 @@ app.post('/emailAlertNotification', (req, res) => {
     .catch(err => {
       res.status(400).send();
     })
+});
+
+app.post('/serverSDKFlags', (req, res) => {
+  // const ldClient = LaunchDarkly.init(process.env.DEV_SDK);
+
+  res.send();
 });
 
 app.listen(PORT, () => console.log(`dev-port ${PORT} is active.`));

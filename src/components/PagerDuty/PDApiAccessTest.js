@@ -32,7 +32,7 @@ const mockIncidentPayload = {
   "event_action": "trigger",
   "client": "Sample Monitoring Service",
   "client_url": "https://monitoring.example.com"
-}
+};
 
 const PDApiAccessTestComponent = () => {
 

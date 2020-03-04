@@ -9,3 +9,5 @@
 
 ##user information
 /lib/userInfo.js
+/server/LaunchDarkly/user.js
+

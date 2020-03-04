@@ -56,17 +56,11 @@ class App extends React.Component {
     return (
       <div>
         <h1>Let's Connect LaunchDarkly with PagerDuty!</h1>
-        {/* <Toggle 
+        <Toggle 
           changeToggleStatus={this.changeToggleStatus}
           toggleStatus={this.state.toggleStatus}
-        /> */}
-        <ClientSDKLaunchDarkly 
-          SDK={this.state.dev_sdk_key}
-          ClientSideID={this.state.dev_client_side_id}
         />
-        <PDApiAccessTestComponent />
-        <ClientLDAPIComponent />
-        {/* {this.state.toggleStatus ?
+        {this.state.toggleStatus ?
           <ClientSDKLaunchDarkly 
             SDK={this.state.dev_sdk_key}
             ClientSideID={this.state.dev_client_side_id}
@@ -76,7 +70,14 @@ class App extends React.Component {
             SDK={this.state.dev_sdk_key}
             ClientSideID={this.state.dev_client_side_id}
           />
-        } */}
+        }
+        {/* <ClientSDKLaunchDarkly 
+          SDK={this.state.dev_sdk_key}
+          ClientSideID={this.state.dev_client_side_id}
+        /> */}
+        <PDApiAccessTestComponent />
+        <ClientLDAPIComponent />
+    
       </div>
     )
   }

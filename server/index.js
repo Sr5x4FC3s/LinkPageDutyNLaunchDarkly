@@ -18,6 +18,7 @@ const ldClient = connectLD(process.env.DEV_SDK);
 
 // LDFlagSubscription(ldClient, 'site-under-maintenance', user, () => LDVariationFlagTrigger(ldClient, 'site-under-maintenance', user, true));
 
+/**************************/
 
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -58,12 +59,6 @@ app.post('/emailAlertNotification', (req, res) => {
     .catch(err => {
       res.status(400).send();
     })
-});
-
-app.post('/serverSDKFlags', (req, res) => {
-  // const ldClient = LaunchDarkly.init(process.env.DEV_SDK);
-
-  res.send();
 });
 
 app.listen(PORT, () => console.log(`dev-port ${PORT} is active.`));

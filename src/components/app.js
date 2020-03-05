@@ -33,14 +33,7 @@ class App extends React.Component {
         });
       })
       .catch(err => console.log(err));
-
-    /** check flags for changes every 0.5 seconds */
-    // this.interval = setInterval(() => this.fetchFlagStatus(), 5000);
   };
-
-  // componentWillUnmount() {
-  //   clearInterval(this.interval);
-  // };
 
   fetchFlagStatus() {
     console.log(this.props.flags);
@@ -71,10 +64,6 @@ class App extends React.Component {
             ClientSideID={this.state.dev_client_side_id}
           />
         }
-        {/* <ClientSDKLaunchDarkly 
-          SDK={this.state.dev_sdk_key}
-          ClientSideID={this.state.dev_client_side_id}
-        /> */}
         <PDApiAccessTestComponent />
         <ClientLDAPIComponent />
     

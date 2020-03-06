@@ -3,6 +3,8 @@ const { createTransporter, createMailOptions, send } = require('../lib/email/uti
 const { connectLD, LDFlagSubscription, LDVariationFlagTrigger } = require('./LaunchDarkly/utils');
 const { user } = require('./LaunchDarkly/user');
 
+// const ngrok = require('ngrok');
+
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
@@ -12,6 +14,25 @@ const PORT = 8080;
 const LaunchDarkly = require('launchdarkly-node-server-sdk');
 
 const app = express();
+
+/** Initializing Ngrok Tunneling */
+// const Ngrok = async () => {
+//   console.log('triggered')
+//   let connection =  await ngrok.connect({
+//     // proto: 'http', // http|tcp|tls, defaults to http
+//     // addr: 8080, // port or network address, defaults to 80
+//     // auth: 'user:pwd', // http basic authentication for tunnel
+//     // subdomain: 'alex', // reserved tunnel name https://alex.ngrok.io
+//     authtoken: process.env.NGROK_AUTH_TOKEN, // your authtoken from ngrok.com
+//     // region: 'us', // one of ngrok regions (us, eu, au, ap), defaults to us
+//     // configPath: '~/git/project/ngrok.yml', // custom path for ngrok config file
+//     // binPath: default => default.replace('app.asar', 'app.asar.unpacked'), // custom binary path, eg for prod in electron
+//     // onStatusChange: status => {}, // 'closed' - connection is lost, 'connected' - reconnected
+//     // onLogEvent: data => {}, // returns stdout messages from ngrok process
+//   });
+//   return connection;
+// };
+
 
 /** Initializing LaunchDarkly + LD Event Listener */
 const ldClient = connectLD(process.env.DEV_SDK);
@@ -23,6 +44,12 @@ const ldClient = connectLD(process.env.DEV_SDK);
 app.use(bodyParser.urlencoded({extended: false}));
 
 app.use(bodyParser.json());
+
+/** middleware for handling LD Site Maintenance Flag Status */
+app.use('/', (req, res, next) => {
+  LDFlagSubscription(ldClient, 'site-under-maintenance', user, () => LDVariationFlagTrigger(ldClient, 'site-under-maintenance', user, true));
+  next();
+});
 
 app.use('/', express.static(path.join(__dirname, '../dist')));
 

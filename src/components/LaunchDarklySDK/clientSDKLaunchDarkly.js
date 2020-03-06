@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { useFlags, useLDClient } from 'launchdarkly-react-client-sdk';
+import { useFlags } from 'launchdarkly-react-client-sdk';
 import { PagerDutyRoutingKey } from '../../../lib/userInfo';
 import { httpsPOST } from '../../../lib/utils';
 
@@ -36,7 +36,6 @@ const PD_payload = {
 
 const ClientSDKLaunchDarkly = ({ SDK, ClientSideID }) => {
   const { devTestFlag, siteUnderMaintenance } = useFlags();
-  const ldClient = useLDClient();
 
   const sendEmailAlert = () => {
     const payload = {

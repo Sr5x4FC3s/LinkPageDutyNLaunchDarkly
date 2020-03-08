@@ -2,8 +2,8 @@ require('dotenv').config();
 const { createTransporter, createMailOptions, send } = require('../lib/email/utils');
 const { connectLD, LDFlagSubscription, LDVariationFlagTrigger } = require('./LaunchDarkly/utils');
 const { user } = require('./LaunchDarkly/user');
-
-// const ngrok = require('ngrok');
+const { decipherHMACSHA256HEX } = require('./crypto/utils');
+const { httpsPOST } = require('./../lib/utils');
 
 const express = require('express');
 const path = require('path');
@@ -15,29 +15,8 @@ const LaunchDarkly = require('launchdarkly-node-server-sdk');
 
 const app = express();
 
-/** Initializing Ngrok Tunneling */
-// const Ngrok = async () => {
-//   console.log('triggered')
-//   let connection =  await ngrok.connect({
-//     // proto: 'http', // http|tcp|tls, defaults to http
-//     // addr: 8080, // port or network address, defaults to 80
-//     // auth: 'user:pwd', // http basic authentication for tunnel
-//     // subdomain: 'alex', // reserved tunnel name https://alex.ngrok.io
-//     authtoken: process.env.NGROK_AUTH_TOKEN, // your authtoken from ngrok.com
-//     // region: 'us', // one of ngrok regions (us, eu, au, ap), defaults to us
-//     // configPath: '~/git/project/ngrok.yml', // custom path for ngrok config file
-//     // binPath: default => default.replace('app.asar', 'app.asar.unpacked'), // custom binary path, eg for prod in electron
-//     // onStatusChange: status => {}, // 'closed' - connection is lost, 'connected' - reconnected
-//     // onLogEvent: data => {}, // returns stdout messages from ngrok process
-//   });
-//   return connection;
-// };
-
-
 /** Initializing LaunchDarkly + LD Event Listener */
 const ldClient = connectLD(process.env.DEV_SDK);
-
-// LDFlagSubscription(ldClient, 'site-under-maintenance', user, () => LDVariationFlagTrigger(ldClient, 'site-under-maintenance', user, true));
 
 /**************************/
 
@@ -86,6 +65,53 @@ app.post('/emailAlertNotification', (req, res) => {
     .catch(err => {
       res.status(400).send();
     })
+});
+
+/** LD WebHooks 
+ * dev ngrok url - tunneling local hosting -  http://cbc60376.ngrok.io/int-ld-updates,  https://cbc60376.ngrok.io/int-ld-updates
+*/
+app.post('/int-ld-updates', (req, res) => {
+  if (req.headers['x-ld-signature'] === decipherHMACSHA256HEX(req.body)) {
+    if (req.body.titleVerb === 'turned off the flag') {
+      const mockIncidentPayload = {
+        "payload": {
+          "summary": "Site-Under-Maintenance Flag has been triggered. Application is now offline to all users.",
+          "timestamp": "2020-03-02T08:42:58.315+0000",
+          "source": "http://127.0.0.1:8080",
+          "severity": "critical",
+          "component": "application",
+          "group": "prod-datapipe",
+          "class": "deploy",
+          "custom_details": {
+            "ping time": "1500ms",
+            "load avg": 0.75
+          }
+        },
+        "routing_key": process.env.PAGERDUTY_ROUTING_KEY,
+        "dedup_key": "samplekeyhere",
+        "images": [{
+          "src": "https://www.pagerduty.com/wp-content/uploads/2016/05/pagerduty-logo-green.png",
+          "href": "https://example.com/",
+          "alt": "Example text"
+        }],
+        "links": [{
+          "href": "https://example.com/",
+          "text": "Link text"
+        }],
+        "event_action": "trigger",
+        "client": "Sample Monitoring Service",
+        "client_url": "https://monitoring.example.com"
+      };
+
+      httpsPOST('https://events.pagerduty.com/v2/enqueue', mockIncidentPayload);
+
+      res.status(200);
+    } else {
+      res.status(200);
+    }
+  } else {
+    res.status(401).send();
+  }
 });
 
 app.listen(PORT, () => console.log(`dev-port ${PORT} is active.`));

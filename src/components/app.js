@@ -3,6 +3,7 @@ import Toggle from './button/toggle';
 import ClientSDKLaunchDarkly from './LaunchDarklySDK/clientSDKLaunchDarkly';
 import ClientLDAPIComponent from './LaunchDarklySDK/clientLaunchDarklyAPI';
 import ServerSDKLaunchDarkly from './LaunchDarklySDK/serverSDKLaunchDarkly';
+import SDKFeatureTestingComponent from './LaunchDarklySDK/sdkFeatureTestingComponent';
 import PDApiAccessTestComponent from './PagerDuty/PDApiAccessTest';
 import axios from 'axios';
 
@@ -66,7 +67,7 @@ class App extends React.Component {
         }
         <PDApiAccessTestComponent />
         <ClientLDAPIComponent />
-    
+        <SDKFeatureTestingComponent />
       </div>
     )
   }

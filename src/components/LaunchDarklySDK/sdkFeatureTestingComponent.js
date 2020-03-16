@@ -14,12 +14,12 @@ const topicData = [
 ];
 
 const SDKFeatureTestingComponent = () => {
-  const ldClient = LDClient;
+  // const ldClient = LDClient;
   // test bootstrapping - local storage and server-side
 
   useEffect(() => {
     // Initialize before the component mounts
-    ldClient.initialize(user1.ClientSideId, user1.info, {bootstrap: ''});
+    // ldClient.initialize(user1.ClientSideId, user1.info, {bootstrap: ''});
 
     // End the connection after it has completely loaded all the bootstrapped features.
   }, []);

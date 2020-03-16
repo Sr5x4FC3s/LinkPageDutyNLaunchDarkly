@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 import App from './components/app';
 import { asyncWithLDProvider } from 'launchdarkly-react-client-sdk';
 import { user1 } from '../lib/userInfo';
@@ -14,9 +15,11 @@ import regeneratorRuntime from "regenerator-runtime";
     },
   });
   ReactDOM.render(
-    <LDProvider>
-      <App />
-    </LDProvider>,
+    <BrowserRouter>
+      <LDProvider>
+        <App />
+      </LDProvider>
+    </BrowserRouter>,
     document.getElementById('app'),
   );
 })();

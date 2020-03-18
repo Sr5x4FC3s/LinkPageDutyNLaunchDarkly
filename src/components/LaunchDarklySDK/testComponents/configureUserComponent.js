@@ -1,10 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import * as LDClient from 'launchdarkly-js-client-sdk';
-import { user1 } from '../../../../lib/userInfo';
 
 const ConfigureUserComponent = ({ retrieveUserConfiguration }) => {
-  const ldClient = LDClient;
-
   const [ipAddress, setIpAddress] = useState('');
   const [key, setKey] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -13,15 +9,6 @@ const ConfigureUserComponent = ({ retrieveUserConfiguration }) => {
   const [country, setCountry] = useState('');
   const [name, setName] = useState('');
   const [anonymous, setAnonymous] = useState(false);
-
-  // test bootstrapping - local storage and server-side
-
-  useEffect(() => {
-    // Initialize before the component mounts
-    // ldClient.initialize(user1.ClientSideId, user1.info, {bootstrap: ''});
-
-    // End the connection after it has completely loaded all the bootstrapped features.
-  }, []);
 
   return (
     <div>

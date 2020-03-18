@@ -67,6 +67,7 @@ const SelectView = () => {
 
       identity(user)
         .then(result => {
+          console.log('result: ', result)
           setUserComponentStatus(result['two-component-flag']);
           setSegmentComponentStatus(result['three-component-flag']);
         })
@@ -92,6 +93,7 @@ const SelectView = () => {
 
       identity(user)
         .then(result => {
+          console.log('result: ', result)
           setUserComponentStatus(result['two-component-flag']);
           setSegmentComponentStatus(result['three-component-flag']);
         })

@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import { user1 } from '../../../../lib/userInfo';
+import LDClient from 'launchdarkly-js-client-sdk';
 
 const ConfigureBootstrapComponent = ({ userOptions }) => {
   const [hash, setHash] = useState(false);
@@ -21,10 +23,6 @@ const ConfigureBootstrapComponent = ({ userOptions }) => {
     console.log('user Options: ', userOptions);
     setUserAttribute(userOptions);
   }, [userOptions]);
-
-  useEffect(() => {
-    console.log('intervals: ', flushInterval, streamReconnectDelay);
-  }, [setFlushInterval, setStreamReconnectDelay]);
 
   const styles = {
     redBox: {width: '100px', height: '50px', backgroundColor: 'red'},

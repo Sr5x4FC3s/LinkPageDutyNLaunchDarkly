@@ -5,7 +5,8 @@ import { user1 } from '../../../../../lib/userInfo';
 import { generateSessionId } from '../../../../../lib/utils';
 
 const SelectView = () => {
-  const [componentStatus, setComponentStatus] = useState(0);
+  const [userComponentStatus, setUserComponentStatus] = useState(0);
+  const [segmentComponentStatus, setSegmentComponentStatus] = useState(0);
   const [currentUser, setCurrentUser] = useState('public');
 
   // options for form select field
@@ -14,28 +15,46 @@ const SelectView = () => {
   // information for different components 
   const information = {
     component1: {
-      name: 'Component 1 - Public View',
-      description: 'A view that is accessable to the general viewers.'
+      name: 'Component 1 - Member View',
+      description: 'A view that is accessible to the exclusive viewers.'
     },
     component2: {
       name: 'Component 2 - Admin View',
-      description: 'A view that is notaccessable to the general viewers and accessable by Admin\'s only'
+      description: 'A view that is not accessible to the general viewers and accessible by Admin\'s only'
     },
     not_visible: {
       name: 'Not Visible',
       description: 'No visible description'
+    },
+    public: {
+      name: 'Public Component',
+      description: 'No target users are set in this segment'
+    },
+    component3: {
+      name: 'Component 1 - Member View',
+      description: 'A view that is accessible to the exclusive viewers.'
+    },
+    component4: {
+      name: 'Component 2 - Admin View',
+      description: 'A view that is not accessible to the general viewers and accessible by Admin\'s only'
     }
   };
+
+  useEffect(() => {
+    console.log(segmentComponentStatus)
+  }, [segmentComponentStatus])
 
   const retrieveFlagStatus = () => {
     // generate a Session ID for anonymous users 
     const sessionId = generateSessionId();
 
     const ldClient = initialize(user1.ClientSideId, user1.info, 'localStorage');
+
     let user;
 
+    // identify feature flag privileges with a single user 
     const identity = (user) => {
-      return new Promise (resolve => {
+      return new Promise(resolve => {
         resolve(ldClient.identify(user))
       });
     };
@@ -48,7 +67,9 @@ const SelectView = () => {
 
       identity(user)
         .then(result => {
-          setComponentStatus(result['two-component-flag']);
+          console.log('result: ', result)
+          setUserComponentStatus(result['two-component-flag']);
+          setSegmentComponentStatus(result['three-component-flag']);
         })
         .catch(error => console.log(error));
 
@@ -61,7 +82,9 @@ const SelectView = () => {
 
       identity(user)
         .then(result => {
-          setComponentStatus(result['two-component-flag']);
+          console.log('result: ', result)
+          setUserComponentStatus(result['two-component-flag']);
+          setSegmentComponentStatus(result['three-component-flag']);
         })
         .catch(error => console.log(error));
 
@@ -70,7 +93,9 @@ const SelectView = () => {
 
       identity(user)
         .then(result => {
-          setComponentStatus(result['two-component-flag']);
+          console.log('result: ', result)
+          setUserComponentStatus(result['two-component-flag']);
+          setSegmentComponentStatus(result['three-component-flag']);
         })
         .catch(error => console.log(error));
     }
@@ -81,12 +106,12 @@ const SelectView = () => {
   return (
     <div>
       <h1>Variation Testing:</h1>
-      {componentStatus === 1 ? 
+      {userComponentStatus === 1 ? 
         <GeneralDisplayComponent 
           name={information.component1.name}
           description={information.component1.description}
         /> 
-        : componentStatus === 2 ?
+        : userComponentStatus === 2 ?
         <GeneralDisplayComponent 
           name={information.component2.name}
           description={information.component2.description}
@@ -94,9 +119,27 @@ const SelectView = () => {
         :
         <GeneralDisplayComponent 
           name={information.not_visible.name}
-          decription={information.not_visible.description}
+          description={information.not_visible.description}
         />
       }
+      <h1>Segment Testing:</h1>
+      {segmentComponentStatus === 1 ? 
+        <GeneralDisplayComponent 
+          name={information.component3.name}
+          description={information.component3.description}
+        /> 
+        : segmentComponentStatus === 2 ?
+        <GeneralDisplayComponent 
+          name={information.component4.name}
+          description={information.component4.description}
+        />
+        :
+        <GeneralDisplayComponent 
+          name={information.public.name}
+          description={information.public.description}
+        />
+      }
+      <h3>Testing Users: Select a type of user and watch the view change as well</h3>
       <form>
         <select onChange={e => setCurrentUser(e.target.value)}>
           {
